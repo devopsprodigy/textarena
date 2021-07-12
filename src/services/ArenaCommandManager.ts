@@ -3,7 +3,7 @@ import ArenaSelection from '../helpers/ArenaSelection';
 import CommandAction from '../interfaces/CommandAction';
 import ArenaServiceManager from './ArenaServiceManager';
 
-export const keyboardKeys = [
+export const keyboardKeysCamel = [
   'Escape', 'F1', 'F2', 'F3', 'F4', 'F5', 'F6', 'F7', 'F8', 'F9', 'F10', 'F11', 'F12', 'Insert', 'Delete',
 
   'Backquote', 'Digit1', 'Digit2', 'Digit3', 'Digit4', 'Digit5',
@@ -29,6 +29,8 @@ export const keyboardKeys = [
   'ArrowUp',
   'ArrowLeft', 'ArrowDown', 'ArrowRight',
 ];
+
+export const keyboardKeys = keyboardKeysCamel.map((key) => key.toLowerCase());
 
 export type KeyboardKey = typeof keyboardKeys[number];
 
@@ -80,8 +82,8 @@ export default class ArenaCommandManager {
     command: string,
   ): ArenaCommandManager {
     const [modifiersSum, key] = this.parseShortcut(shortcut);
-    const s = `${modifiersSum}+${key}`;
-    this.shortcuts[s] = command;
+    const shortcutKey = this.getShortcutKey(modifiersSum, key);
+    this.shortcuts[shortcutKey] = command;
     return this;
   }
 
@@ -107,9 +109,9 @@ export default class ArenaCommandManager {
     modifiersSum: number,
     key: KeyboardKey,
   ): void {
-    const shortcut = `${modifiersSum}+${key}`;
-    if (this.shortcuts[shortcut]) {
-      this.execCommand(this.shortcuts[shortcut], selection);
+    const shortcutKey = this.getShortcutKey(modifiersSum, key);
+    if (this.shortcuts[shortcutKey]) {
+      this.execCommand(this.shortcuts[shortcutKey], selection);
     }
   }
 
@@ -120,26 +122,31 @@ export default class ArenaCommandManager {
       | (modifiers.Meta ? Modifiers.Meta : 0);
   }
 
-  parseShortcut(shortcut: string): [number, string | undefined] {
+  parseShortcut(shortcut: string): [number, string] {
     const keys = shortcut.split('+');
     let sum = 0;
     let lastKey: string | undefined;
-    keys.forEach((key) => {
-      if (key.trim().toLowerCase() === 'shift') {
+    keys.forEach((str) => {
+      const key = str.trim().toLowerCase();
+      if (key === 'shift') {
         sum += Modifiers.Shift;
-      } else if (['ctrl', 'control'].includes(key.trim().toLowerCase())) {
+      } else if (['ctrl', 'control'].includes(key)) {
         sum += Modifiers.Ctrl;
-      } else if (key.trim().toLowerCase() === 'alt') {
+      } else if (key === 'alt') {
         sum += Modifiers.Alt;
-      } else if (['meta', 'win', 'windows'].includes(key.trim().toLowerCase())) {
+      } else if (['meta', 'win', 'windows'].includes(key)) {
         sum += Modifiers.Meta;
       } else {
-        lastKey = key.trim();
+        lastKey = key;
       }
     });
     if (lastKey && keyboardKeys.includes(lastKey)) {
       return [sum, lastKey];
     }
     throw new Error(`Can not parse shortcut ${shortcut}`);
+  }
+
+  protected getShortcutKey(modifiersSum: number, key: string): string {
+    return `${modifiersSum}+${key.toLowerCase()}`;
   }
 }

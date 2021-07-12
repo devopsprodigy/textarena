@@ -42,6 +42,7 @@ import asidePlugin from './plugins/asidePlugin';
 import quotePlugin from './plugins/quoteBlock/quoteBlockPlugin';
 import figurePlugin from './plugins/figure/figurePlugin';
 import typoSugarPlugin from './plugins/typoSugarPlugin';
+import columnsPlugin from './plugins/columnsPlugin';
 
 export const defaultOptions: TextarenaOptions = {
   editable: true,
@@ -82,6 +83,7 @@ export const defaultOptions: TextarenaOptions = {
       'aside',
       'quote-block',
       'callout',
+      'two-columns',
     ],
   },
   plugins: [
@@ -100,6 +102,7 @@ export const defaultOptions: TextarenaOptions = {
     asidePlugin(),
     quotePlugin(),
     typoSugarPlugin(),
+    columnsPlugin(),
   ],
 };
 

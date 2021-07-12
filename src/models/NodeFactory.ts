@@ -37,9 +37,10 @@ export default class NodeFactory {
           }
           const node = this.createChildNode(childArena, registry, isNew, childContent);
           node.setAttributes(attributes);
+
           return node;
         });
-      } else if (isNew && content && arena.arenaForText) {
+      } else if (isNew && content !== undefined && arena.arenaForText) {
         const node = this.createChildNode(arena.arenaForText, registry, isNew, content);
         children.push(node);
       }

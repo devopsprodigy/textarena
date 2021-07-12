@@ -86,7 +86,7 @@ export default abstract class AbstractParentNode<
         </svg>
         </textarena-remove>`;
         this.cache = html`
-          <textarena-node contenteditable="false" arena-id="${id}">${removeButton}${content}</textarena-node>
+          <textarena-node arena-id="${id}">${removeButton}${content}</textarena-node>
         `;
       } else {
         this.cache = content;

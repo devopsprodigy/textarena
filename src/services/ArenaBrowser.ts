@@ -347,7 +347,7 @@ export default class ArenaBrowser {
     }
     if (specialCodes[keyCode] || modifiersSum > Modifiers.Shift) {
       this.asm.logger.info(`${prefix} command ${modifiersSum} + ${code}`, e);
-      if (code && keyboardKeys.includes(code)) {
+      if (code && keyboardKeys.includes(code.toLowerCase())) {
         return new CommandEvent(e, code, modifiersSum);
       }
       return undefined;
